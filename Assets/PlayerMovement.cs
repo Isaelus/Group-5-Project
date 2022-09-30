@@ -76,6 +76,4 @@ public class PlayerMovement : MonoBehaviour
             canDash = true;
         }
     }
-
-    private
 }
