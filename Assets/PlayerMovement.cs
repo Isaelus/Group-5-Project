@@ -5,8 +5,8 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     //movement variables
-    [SerializeField] private float movSpeed;
-    [SerializeField] private float jumpForce;
+    [SerializeField] private float movSpeed = 7f;
+    [SerializeField] private float jumpForce = 14f;
     /*
     [SerializeField] private float dashForce;
     [SerializeField] private bool canDash;
@@ -14,7 +14,7 @@ public class PlayerMovement : MonoBehaviour
     */
 
     //detection variables
-    [SerializeField] private LayerMask jumpableGround;
+    [SerializeField] private LayerMask jumpableGround = 6;
     [SerializeField] private Rigidbody2D player1;
     [SerializeField] private BoxCollider2D p1Hitbox;
 
@@ -30,10 +30,6 @@ public class PlayerMovement : MonoBehaviour
         Debug.Log("New Game Start - view from console");
         player1 = GetComponent<Rigidbody2D>();
         p1Hitbox = GetComponent<BoxCollider2D>();
-
-        movSpeed = 4f;
-        jumpForce = 4f;
-        //dashForce = 6f;
     }
 
     // Update is called once per frame
