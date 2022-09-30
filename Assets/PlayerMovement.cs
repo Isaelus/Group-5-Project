@@ -8,6 +8,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float movSpeed;
     [SerializeField] private float jumpForce;
     [SerializeField] private float dashForce;
+    [SerializeField] private bool canDash;
+    [SerializeField] private float dashDirection;
 
     //detection variables
     [SerializeField] private LayerMask jumpableGround;
@@ -46,22 +48,34 @@ public class PlayerMovement : MonoBehaviour
             player1.velocity = new Vector2(player1.velocity.x, jumpForce);
         }
 
-        /*Dash
-        if (Time.time > currentDashCD) {
-            if (Input.GetButtonDown("Dash")) {
-                
-                print("dashed!");
-                currentDashCD = Time.time + dashCooldownTime;
-            }
+        /* Dash
+        if (Input.GetButtonDown("Dash") && dirX != 0) {
+            canDash = false;
+            currentDashCD = dashCooldownTime;
+            rb.velocity = Vector2.zero;
+            dashDirection = (int)dirX;
         }
         */
+        // 
+        if (!canDash) {
+            dashCD();
+        }
+        
     }
+
     //this method checks if the player is grounded.
     private bool IsGrounded()
     {
         return Physics2D.BoxCast(p1Hitbox.bounds.center, p1Hitbox.bounds.size, 0f, Vector2.down, 0.1f, jumpableGround);
     }
 
-    
+    //timer for cooldown
+    private void dash() {
+        currentDashCD -= Time.deltaTime
+        if (currentDashCD <= 0) {
+            canDash = true;
+        }
+    }
 
+    private
 }
