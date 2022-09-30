@@ -7,9 +7,11 @@ public class PlayerMovement : MonoBehaviour
     //movement variables
     [SerializeField] private float movSpeed;
     [SerializeField] private float jumpForce;
+    /*
     [SerializeField] private float dashForce;
     [SerializeField] private bool canDash;
     [SerializeField] private float dashDirection;
+    */
 
     //detection variables
     [SerializeField] private LayerMask jumpableGround;
@@ -31,7 +33,7 @@ public class PlayerMovement : MonoBehaviour
 
         movSpeed = 4f;
         jumpForce = 4f;
-        dashForce = 6f;
+        //dashForce = 6f;
     }
 
     // Update is called once per frame
@@ -55,11 +57,12 @@ public class PlayerMovement : MonoBehaviour
             rb.velocity = Vector2.zero;
             dashDirection = (int)dirX;
         }
-        */
+        
         // 
         if (!canDash) {
             dashCD();
         }
+        */
         
     }
 
@@ -70,10 +73,12 @@ public class PlayerMovement : MonoBehaviour
     }
 
     //timer for cooldown
+    /*
     private void dash() {
-        currentDashCD -= Time.deltaTime
+        currentDashCD -= Time.deltaTime;
         if (currentDashCD <= 0) {
             canDash = true;
         }
     }
+    */
 }
