@@ -5,8 +5,8 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     //movement variables
-    [SerializeField] private float movSpeed = 7f;
-    [SerializeField] private float jumpForce = 14f;
+    [SerializeField] private float movSpeed;
+    [SerializeField] private float jumpForce;
     /*
     [SerializeField] private float dashForce;
     [SerializeField] private bool canDash;
@@ -30,6 +30,9 @@ public class PlayerMovement : MonoBehaviour
         Debug.Log("New Game Start - view from console");
         player1 = GetComponent<Rigidbody2D>();
         p1Hitbox = GetComponent<BoxCollider2D>();
+        
+        movSpeed = 7f;
+        jumpForce = 14f;
     }
 
     // Update is called once per frame
