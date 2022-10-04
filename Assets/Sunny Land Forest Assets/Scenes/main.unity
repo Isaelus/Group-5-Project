@@ -6289,7 +6289,7 @@ Animator:
   m_GameObject: {fileID: 1356892750}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: ff5b2fe1f4ea0454897065e82f19a427, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -6422,7 +6422,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1356892750}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6b581a4e5fe57949b812db82b0fb59b, type: 3}
+  m_Script: {fileID: 11500000, guid: 09baaca3d39da5e4d8f155115d63f2db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   jumpableGround:
