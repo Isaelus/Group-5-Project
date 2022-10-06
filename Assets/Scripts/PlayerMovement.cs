@@ -1,6 +1,8 @@
 using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -17,6 +19,12 @@ public class PlayerMovement : MonoBehaviour
     private bool canAttack = true;
     private bool isAttacking = false;
     private float attackTime = 0.5f;
+    private float attackRange = 10f;
+    
+    public bool immunity = false;
+    public int health = 3;
+    private Collider2D nearestEnemy;
+    private GameObject target;
 
     //cooldown variables
     private float dashCooldownTime = 2f;
@@ -146,10 +154,76 @@ public class PlayerMovement : MonoBehaviour
     private IEnumerator Attack() {
         canAttack = false;
         isAttacking = true;
+        //Get nearest enemy location in direction of attack NOTE: Gave up on this part, someone wants to crack at it, be my guest - Kyle
+            
+        //nearestEnemy = GetClosestEnemy(player1.velocity.x > 0f);
+
+        //if (nearestEnemy != null) {
+           // target = nearestEnemy.gameObject;
+            //if ((transform.position.x - Math.Abs(target.transform.position.x)) > attackRange || (transform.position.x - Math.Abs(target.transform.position.y) > attackRange))
+            //{
+               // target = nearestEnemy.gameObject;
+               // if (target)
+               // {
+                   // Destroy(target,.05f);
+                //};
+            //}
+        //}
+     
+        nearestEnemy = null;
+
         UpdateAnimation();
         yield return new WaitForSeconds(attackTime);
         isAttacking = false;
         yield return new WaitForSeconds(attackCoolDownTime);
         canAttack = true;
     }
+    //---------------------------------------------------------------------------------------------
+    //-     Collision Detection -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   
+    //---------------------------------------------------------------------------------------------
+    private void OnTriggerEnter(Collider other)
+    {
+        //Hurt the player
+        if (other.tag == "Enemy")
+        {
+            health = health - 1;
+            if (health == 0)
+            {
+                //Death
+                Destroy(this);
+            }
+        }
+
+    }
+
+    //--Code taken from Cameron Oltmann on stackexchange-- Returns the collision of the closest enemy facing the player
+    Collider2D GetClosestEnemy(bool facingRight)
+    {
+        Vector2 pos = transform.position;
+        IEnumerable<Collider2D> validTargets;
+
+        // Get all targets in range
+        // Note:  You'll probably want to add a layermask to the OverlapCircleAll call
+        var targets = Physics2D.OverlapCircleAll(pos, 15);
+
+        if (facingRight)
+        {
+            // Filter results to only include targets to the right                
+            validTargets = targets.Where(coll => coll.transform.position.x >= pos.x);
+        }
+        else
+        {
+            // Filter results to only include targets to the left
+            validTargets = targets.Where(coll => coll.transform.position.x <= pos.x);
+        }
+
+        // I've broken the return statement into multiple lines for easier readability
+        return validTargets
+            // Sort targets by distance
+            .OrderBy(coll => Vector2.Distance(pos, coll.transform.position))
+            // Return first result, or null if no valid targets
+            .FirstOrDefault();
+
+    }
 }
+
