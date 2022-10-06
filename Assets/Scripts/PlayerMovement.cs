@@ -11,7 +11,6 @@ public class PlayerMovement : MonoBehaviour
     private float jumpForce = 14f;
     private float fastFallForce = -7f;
     private float dirX;
-    private bool isGrounded;
     private bool canDash = true;
     private bool isDashing = false;
     private float dashForce = 5f;
@@ -60,7 +59,6 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        isGrounded = IsGrounded();
         // This allows the dash to work properly.
         if (isDashing) {
             return;
@@ -75,24 +73,29 @@ public class PlayerMovement : MonoBehaviour
         player1.velocity = new Vector2(dirX * movSpeed, player1.velocity.y);
 
         // Jump
-        if (Input.GetButtonDown("Jump") && isGrounded)
+        if (Input.GetButtonDown("Jump") && IsGrounded())
         {
             player1.velocity = new Vector2(player1.velocity.x, jumpForce);
         }
 
         //Fast Fall
-        if (Input.GetKeyDown(KeyCode.S) && !isGrounded) {
+        if (Input.GetKeyDown(KeyCode.S) && !IsGrounded()) {
             player1.velocity = new Vector2(player1.velocity.x, fastFallForce);
         }
 
         // Attack
-        if (Input.GetKeyDown(KeyCode.K) && isGrounded && canAttack) {
+        if (Input.GetKeyDown(KeyCode.K) && IsGrounded() && canAttack) {
             StartCoroutine(Attack());
         }
         
         // Dashing
         if (Input.GetKeyDown(KeyCode.LeftShift) && canDash) {
             StartCoroutine(Dash());
+        }
+
+        // test
+        if (Input.GetKeyDown(KeyCode.G)) {
+            health--;
         }
 
         UpdateAnimation();
@@ -187,7 +190,7 @@ public class PlayerMovement : MonoBehaviour
         if (other.tag == "Enemy")
         {
             health = health - 1;
-            if (health == 0)
+            if (health <= 0)
             {
                 //Death
                 Destroy(this);
