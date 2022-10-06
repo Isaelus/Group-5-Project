@@ -5,11 +5,11 @@ using UnityEngine.UI;
 
 public class healthHUD : MonoBehaviour
 {
-    private GameObject entity;
+    public GameObject entity;
     private PlayerMovement player;
     private int currentHealth;
     private int dmgTaken;
-    private Image hud;
+    public Image hud;
     [SerializeField] private Sprite[] healthStates;
 
     private void Start() {

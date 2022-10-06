@@ -92,8 +92,8 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftShift) && canDash) {
             StartCoroutine(Dash());
         }
-
-        // test
+        
+        // fast way to test health HUD
         if (Input.GetKeyDown(KeyCode.G)) {
             health--;
         }
