@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-public class highscore : MonoBehaviour
+
+public class currentTime : MonoBehaviour
 {
-    static public int score=1000;
+    static public int score=0;
     // Start is called before the first frame update
     void Start()
     {
@@ -14,7 +15,12 @@ public class highscore : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        TextMeshProUGUI gt = this.GetComponent<TextMeshProUGUI>();
-        gt.text = "High Score: "+score;
+        
+    }
+
+    void FixedUpdate(){
+        score++;
+        TextMeshPro gt = this.GetComponent<TextMeshPro>();
+        gt.text = "Time: "+score;
     }
 }
