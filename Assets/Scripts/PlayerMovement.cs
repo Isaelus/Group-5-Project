@@ -18,12 +18,14 @@ public class PlayerMovement : MonoBehaviour
     private bool canAttack = true;
     private bool isAttacking = false;
     private float attackTime = 0.5f;
-    private float attackRange = 10f;
+    public float attackRange = 1.0f;
+    private bool facingRight;
     
+    //combat variables
     public bool immunity = false;
     public int health = 3;
-    private Collider2D nearestEnemy;
-    private GameObject target;
+    public Transform attackPoint;
+    public LayerMask enemyLayers;
 
     //cooldown variables
     private float dashCooldownTime = 2f;
@@ -52,8 +54,10 @@ public class PlayerMovement : MonoBehaviour
         player1 = GetComponent<Rigidbody2D>();
         p1Hitbox = GetComponent<BoxCollider2D>();
         jumpableGround = LayerMask.GetMask("Ground");
+        enemyLayers = LayerMask.GetMask("Enemy");
         anim = GetComponent<Animator>();
         sprite = GetComponent<SpriteRenderer>();
+        facingRight = true;
     }
 
     // Update is called once per frame
@@ -72,6 +76,12 @@ public class PlayerMovement : MonoBehaviour
         dirX  = Input.GetAxisRaw("Horizontal");
         player1.velocity = new Vector2(dirX * movSpeed, player1.velocity.y);
 
+        if (dirX > 0 && !facingRight) {
+            Flip();
+        }
+        if (dirX < 0 && facingRight) {
+            Flip();
+        }
         // Jump
         if (Input.GetButtonDown("Jump") && IsGrounded())
         {
@@ -86,17 +96,23 @@ public class PlayerMovement : MonoBehaviour
         // Attack
         if (Input.GetKeyDown(KeyCode.K) && IsGrounded() && canAttack) {
             StartCoroutine(Attack());
+            Collider2D[] enemiesHit = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
+            foreach(Collider2D enemy in enemiesHit)
+            {
+                Debug.Log("Hit!");
+            }
         }
         
         // Dashing
         if (Input.GetKeyDown(KeyCode.LeftShift) && canDash) {
             StartCoroutine(Dash());
         }
-        
+        /*
         // fast way to test health HUD
         if (Input.GetKeyDown(KeyCode.G)) {
             health--;
         }
+        */
 
         UpdateAnimation();
     }
@@ -106,10 +122,8 @@ public class PlayerMovement : MonoBehaviour
         // Flips character and checks if running
         if (dirX > 0f) {
             state = MovementState.running;
-            sprite.flipX = false;
         } else if (dirX < 0f) {
             state = MovementState.running;
-            sprite.flipX = true;
         } else {
             state = MovementState.idle;
         }
@@ -129,6 +143,13 @@ public class PlayerMovement : MonoBehaviour
         anim.SetInteger("state", (int) state);
     }
 
+    private void Flip() {
+        Vector3 currentScale = gameObject.transform.localScale;
+        currentScale.x *= -1;
+        gameObject.transform.localScale = currentScale;
+        facingRight = !facingRight;
+    }
+
     //this method checks if the player is grounded.
     private bool IsGrounded()
     {
@@ -141,12 +162,7 @@ public class PlayerMovement : MonoBehaviour
         isDashing = true;
         float originalGravity = player1.gravityScale;
         player1.gravityScale = 0f;
-        if (player1.velocity.x > 0f) {
-            player1.velocity = new Vector2(transform.localScale.x * dashForce, 0f);
-        } else if (player1.velocity.x < 0f) {
-            player1.velocity = new Vector2(-transform.localScale.x * dashForce, 0f);
-        }
-        
+        player1.velocity = new Vector2(transform.localScale.x * dashForce, 0f);
         yield return new WaitForSeconds(dashTime);
         player1.gravityScale = originalGravity;
         isDashing = false;
@@ -156,77 +172,36 @@ public class PlayerMovement : MonoBehaviour
     //coroutine for attacking
     private IEnumerator Attack() {
         canAttack = false;
-        isAttacking = true;
-        //Get nearest enemy location in direction of attack NOTE: Gave up on this part, someone wants to crack at it, be my guest - Kyle
-            
-        //nearestEnemy = GetClosestEnemy(player1.velocity.x > 0f);
-
-        //if (nearestEnemy != null) {
-           // target = nearestEnemy.gameObject;
-            //if ((transform.position.x - Math.Abs(target.transform.position.x)) > attackRange || (transform.position.x - Math.Abs(target.transform.position.y) > attackRange))
-            //{
-               // target = nearestEnemy.gameObject;
-               // if (target)
-               // {
-                   // Destroy(target,.05f);
-                //};
-            //}
-        //}
-     
-        nearestEnemy = null;
-
+        isAttacking = true; 
         UpdateAnimation();
         yield return new WaitForSeconds(attackTime);
         isAttacking = false;
         yield return new WaitForSeconds(attackCoolDownTime);
         canAttack = true;
     }
+
+    //function that only exists to visualize the hitbox when selecting player1 gameObject
+    void OnDrawGizmosSelected() {
+        if (attackPoint == null) {
+            return;
+        }
+        Gizmos.DrawWireSphere(attackPoint.position, attackRange);
+    }
     //---------------------------------------------------------------------------------------------
     //-     Collision Detection -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   
     //---------------------------------------------------------------------------------------------
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         //Hurt the player
         if (other.tag == "Enemy")
         {
-            health = health - 1;
+            health--;
             if (health <= 0)
             {
                 //Death
                 Destroy(this);
             }
         }
-
-    }
-
-    //--Code taken from Cameron Oltmann on stackexchange-- Returns the collision of the closest enemy facing the player
-    Collider2D GetClosestEnemy(bool facingRight)
-    {
-        Vector2 pos = transform.position;
-        IEnumerable<Collider2D> validTargets;
-
-        // Get all targets in range
-        // Note:  You'll probably want to add a layermask to the OverlapCircleAll call
-        var targets = Physics2D.OverlapCircleAll(pos, 15);
-
-        if (facingRight)
-        {
-            // Filter results to only include targets to the right                
-            validTargets = targets.Where(coll => coll.transform.position.x >= pos.x);
-        }
-        else
-        {
-            // Filter results to only include targets to the left
-            validTargets = targets.Where(coll => coll.transform.position.x <= pos.x);
-        }
-
-        // I've broken the return statement into multiple lines for easier readability
-        return validTargets
-            // Sort targets by distance
-            .OrderBy(coll => Vector2.Distance(pos, coll.transform.position))
-            // Return first result, or null if no valid targets
-            .FirstOrDefault();
-
     }
 }
 
