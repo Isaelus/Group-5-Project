@@ -18,7 +18,7 @@ public class PlayerMovement : MonoBehaviour
     private bool canAttack = true;
     private bool isAttacking = false;
     private float attackTime = 0.5f;
-    public float attackRange = 1.0f;
+    public float attackRange = .75f;
     private bool facingRight;
     
     //combat variables
@@ -94,12 +94,29 @@ public class PlayerMovement : MonoBehaviour
         }
 
         // Attack
-        if (Input.GetKeyDown(KeyCode.K) && IsGrounded() && canAttack) {
+        if (Input.GetKeyDown(KeyCode.K) &&  canAttack)
+        {//IsGrounded() &&
             StartCoroutine(Attack());
             Collider2D[] enemiesHit = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
             foreach(Collider2D enemy in enemiesHit)
             {
-                Debug.Log("Hit!");
+                if (facingRight && enemy.transform.position.x > transform.position.x)
+                {
+                    Debug.Log("Hit!");
+                    Destroy(enemy.gameObject);
+
+                }
+                else if (!facingRight && enemy.transform.position.x < transform.position.x)
+                {
+                    Debug.Log("Hit!");
+                    Destroy(enemy.gameObject);
+                }
+                else
+                {
+                    Debug.Log("Enemy found, but in wrong direction");
+                }
+
+
             }
         }
         
