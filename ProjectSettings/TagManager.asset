@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Enemy
+  - Sword
+  - Grid
   layers:
   - Default
   - TransparentFX
@@ -50,4 +52,7 @@ TagManager:
     locked: 0
   - name: objects <3
     uniqueID: 181448563
+    locked: 0
+  - name: Entities
+    uniqueID: 736167497
     locked: 0

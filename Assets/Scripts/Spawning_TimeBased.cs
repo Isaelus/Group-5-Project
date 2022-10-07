@@ -11,6 +11,7 @@ public class Spawning_TimeBased : MonoBehaviour
     public float enemySpawnRate = 10;
     public int totalEnemies;
     public float timeSinceLastSpawn = 0;
+    private float timeSinceLastIncrease = 0;
     public float spawnDelay = 20;
     public GameObject enemyPrefab;
     private const int spawningLocations = 9;
@@ -29,18 +30,18 @@ public class Spawning_TimeBased : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //--Caclulate spawn limit-- 
-        spawnLimit = spawnLimit + (int)(Mathf.Floor(Time.time / enemySpawnRate));
+        //--Caclulate spawn limit and fetch the amount of enemies-- 
+        if (Time.time > timeSinceLastIncrease + enemySpawnRate) {
+            spawnLimit = spawnLimit + 1;
+            timeSinceLastIncrease = Time.time;
+            totalEnemies = enemyCount();
+           }
 
         //--Try to spawn an enemy--
         if (totalEnemies < spawnLimit){
             Debug.Log(timeSinceLastSpawn);
             Debug.Log(spawnDelay);
-            if (timeSinceLastSpawn < spawnDelay){
-                
-
                 spawnEnemyRandomly();
-            }
         }
 
     }
@@ -81,5 +82,19 @@ public class Spawning_TimeBased : MonoBehaviour
         posE.y = y;
         enemyGO.transform.position = posE;
         timeSinceLastSpawn = Time.time;
+    }
+
+    int enemyCount()
+    {
+        GameObject current = GameObject.Find("Enemy");
+        int i = 0;
+
+        while (current != null)
+        {
+            // Do something with current GameObject...
+            i++;
+            current = GameObject.Find("Enemy" + i);
+        }
+        return i;
     }
 }
