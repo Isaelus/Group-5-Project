@@ -9,7 +9,7 @@ using System.Linq;
 public class EnemyAI : MonoBehaviour
 {
     //---------------------------------------------------------------------------------------------
-    //--All variables in this box were borrowed from PlayerMovemnet, some of their usages as well--
+    //--Some variables in this box were borrowed from PlayerMovemnet, some of their usages as well--
     //---------------------------------------------------------------------------------------------
     public float movSpeed = 2f;
     public float jumpForce = 14f;
@@ -189,20 +189,21 @@ public class EnemyAI : MonoBehaviour
 
     public void killMob()
     {
-        Destroy(this);
+        Destroy(this.gameObject);
     }
     //---------------------------------------------------------------------------------------------
     //-     Collision Detection -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   
     //---------------------------------------------------------------------------------------------
-//    private void OnTriggerEnter(Collider other)
- //   {
- //       if (other.gameObject && other.tag == "Player")
- //       {
-//            //Destroy the mob
-  //          killMob();
-  //      }
+    private void OnCollisionEnter(Collider other)
+    {
+        if (other.tag == "Player")
+        {
+            //Destroy the mob
+
+          killMob();
+        }
        
- //   }
+    }
 
 }
 

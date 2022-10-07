@@ -15509,6 +15509,7 @@ MonoBehaviour:
     m_Bits: 64
   player1: {fileID: 1356892752}
   p1Hitbox: {fileID: 1356892755}
+  grid: {fileID: 0}
 --- !u!1 &1378432923
 GameObject:
   m_ObjectHideFlags: 0
@@ -15698,11 +15699,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1417140286}
   - component: {fileID: 1417140285}
-  - component: {fileID: 1417140287}
   - component: {fileID: 1417140288}
   m_Layer: 0
   m_Name: Grid
-  m_TagString: Untagged
+  m_TagString: Grid
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15736,31 +15736,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1417140287
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1417140284}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38aea10cb2bd7f34f8948281a93f9ef9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  movSpeed: 2
-  jumpForce: 14
-  attackTime: 0.5
-  dashForce: 5
-  attackCoolDownTime: 1
-  attackRange: 1
-  AggroY: 7
-  AggroX: 25
-  jumpableGround:
-    serializedVersion: 2
-    m_Bits: 0
-  EnemyRB: {fileID: 0}
-  EnemyBC: {fileID: 0}
 --- !u!114 &1417140288
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15775,10 +15750,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnLimit: 20
   startingSpawnSize: 4
-  enemySpawnRate: 10
+  enemySpawnRate: 2
   totalEnemies: 0
   timeSinceLastSpawn: 0
-  spawnDelay: 20
+  spawnDelay: 2
   enemyPrefab: {fileID: 860817204158827188, guid: 4a645e02ace5cd94db415c46bdafc6f2, type: 3}
 --- !u!1 &1451276855
 GameObject:

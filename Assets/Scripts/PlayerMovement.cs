@@ -37,6 +37,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private BoxCollider2D p1Hitbox;
     private Animator anim;
     private SpriteRenderer sprite;
+    public GameObject grid;
+    Spawning_TimeBased spawningScript;
 
     // toggles between possible animation states
     private enum MovementState {
@@ -58,6 +60,10 @@ public class PlayerMovement : MonoBehaviour
         anim = GetComponent<Animator>();
         sprite = GetComponent<SpriteRenderer>();
         facingRight = true;
+        //Get the game grid
+        grid = GameObject.Find("Grid");
+        spawningScript = grid.GetComponent<Spawning_TimeBased>();
+
     }
 
     // Update is called once per frame
@@ -98,18 +104,21 @@ public class PlayerMovement : MonoBehaviour
         {//IsGrounded() &&
             StartCoroutine(Attack());
             Collider2D[] enemiesHit = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
+
             foreach(Collider2D enemy in enemiesHit)
             {
                 if (facingRight && enemy.transform.position.x > transform.position.x)
                 {
                     Debug.Log("Hit!");
                     Destroy(enemy.gameObject);
+                    spawningScript.totalEnemies--;
 
                 }
                 else if (!facingRight && enemy.transform.position.x < transform.position.x)
                 {
                     Debug.Log("Hit!");
                     Destroy(enemy.gameObject);
+                    spawningScript.totalEnemies--;
                 }
                 else
                 {
